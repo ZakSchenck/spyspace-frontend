@@ -5,7 +5,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'App',
   // Watches the route, then if the route is sign in or sign up, it adds a class to set the background image
@@ -39,6 +38,7 @@ body {
 .bg-on-auth-page {
   background-image: url('./assets/website-bg-asset.jpeg');
   background-size: cover;
-  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
 }
 </style>

@@ -3,15 +3,14 @@
         <div v-if="!isLoading" class="posts-container__wrapper">
             <div v-for="item in reversedPosts" :key="item.username" class="posts-container__card-container">
                 <div class="posts-card__post-container">
-                    <img :src="require(`@/assets/${item.user.profile_picture}`)" />
+                    <img :src="require(`@/assets/pfp-funny.jpeg`)" />
                     <div class="posts-card__col-container">
                         <div class="posts-card__post-title">
-                            <router-link to="/">@{{ item.user.username }}</router-link>
-                            <div></div>
+                            <router-link :to="`/users/${item.user.username}/posts`">@{{ item.user.username }}</router-link>
                             <p id="date">{{ formatDate(item.created_at) }}</p>
                         </div>
                         <p id="body">{{ item.body }}</p>
-                        <div class="posts-card__post-title">
+                        <div class="posts-card__post-title" @click="viewRepliesPage(item.id)">
                             <img id="reply-btn" src="../assets/feedback.png" alt="reply button" />
                             <p id="replies-num">{{ item.replies.length }}</p>
                         </div>
@@ -24,30 +23,49 @@
 </template>
     
 <script>
-import { getPostData } from '../api/postData';
 export default {
     name: 'PostsCard',
     data() {
         return {
+            // Checks if api data is loading
             isLoading: true,
+            // Data for all posts
             postData: null,
+            // Numbers of data to be shown with infinite scroll
+            numberOfData: 10
         }
     },
-    async beforeMount() {
+
+    props: {
+        data: Object
+    },
+
+    // GET data for all posts
+    async created() {
         try {
-            this.postData = await getPostData();
+            this.postData = await this.data;
             this.isLoading = false;
         } catch (error) {
             this.isLoading = false;
             console.error('Error fetching data:', error);
         }
     },
-    computed: {
-        // Reverses the order of postData
-        reversedPosts() {
-            console.log(this.postData)
+    // Add scroll function for infinite scroll
+    mounted() {
+        window.addEventListener('scroll', this.handleInfiniteScroll);
+    },
 
-            return this.postData ? this.postData.slice().reverse() : null;
+    // Removing scroll function when unmounted to prevent memory leaks
+    unmounted() {
+        window.removeEventListener('scroll', this.handleInfiniteScroll);
+    },
+    computed: {
+        // Reverses the order of postData and gets the first 10 elements initially
+        reversedPosts() {
+            const copyData = this.postData.slice();
+            const reversedData = copyData.reverse();
+            const data = reversedData.slice(0, this.numberOfData)
+            return data;
         },
     },
     methods: {
@@ -57,10 +75,24 @@ export default {
             const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear().toString()}`;
             return formattedDate;
         },
+
+        // Handling scroll logic for infinite scroll
+        handleInfiniteScroll() {
+            // Gets Y scroll off set height
+            const maxScrollY = document.body.scrollHeight - window.innerHeight;
+
+            // When i reach a certain point at the bottom of the page, load 10 more posts
+            if (maxScrollY - window.scrollY < 165) this.numberOfData += 10
+        },
+
+        // View all replies for a single post
+        viewRepliesPage(postId) {
+            this.$router.push(`/posts/${postId}/replies`)
+        },
     }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .posts-card__post-container {
     width: 600px;
     margin: 0 auto;
@@ -74,6 +106,7 @@ export default {
         display: flex;
         flex-direction: column;
     }
+
     img {
         width: 40px;
         height: 40px;
@@ -84,6 +117,10 @@ export default {
         color: rgb(130, 130, 130);
         font-size: 12px;
         text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
     #body {
@@ -115,10 +152,19 @@ export default {
         height: 20px;
         filter: invert(1);
         margin-top: 16px;
+        &:hover {
+            cursor: pointer;
+        }
     }
 
     #replies-num {
         margin-top: 16px;
+    }
+}
+
+@media all and (max-width: 820px) {
+    .posts-card__post-container {
+        width: 100%;
     }
 }
 </style>

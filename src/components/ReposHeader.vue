@@ -26,4 +26,10 @@ section {
     height: 100vh;
     box-sizing: content-box;
 }
+
+@media all and (max-width: 820px) {
+    section {
+        display: none;
+    }
+}
 </style>

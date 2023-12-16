@@ -24,6 +24,7 @@
             </div>
 
             <button type="submit">Register</button>
+            <p id="signup-container__error">{{ error }}</p>
             <router-link to="/signin">Already have an account? Log in!</router-link>
         </form>
     </div>
@@ -54,13 +55,14 @@ export default {
         // Triggers sign up request to API
         async signup() {
             try {
+                if (this.createPassword !== this.confirmPassword) {
+                    return this.error = 'Passwords must match';
+                }
                 const response = await signUp({ email: this.createEmail, username: this.createUsername, password: this.createPassword, password_confirmation: this.confirmPassword });
+                if (response) this.signupApproved();
 
-                    console.log(response)
-                    // this.signinApproved();
-                
             } catch (error) {
-                // Handle any errors from the signIn function
+                // Handle any errors from the signUp function
                 console.error('Sign-in error:', error);
                 this.signupFailed(error.message);
             }
@@ -68,12 +70,6 @@ export default {
         },
         // If sign up request is successful, it sends csrf to local storage and allows user to sign in
         signupApproved() {
-        //     if (!response.data.csrf) {
-        //         this.signupFailed(response);
-        //         return;
-        //     }
-
-        //     localStorage.csrf = response.data.csrf
             this.error = '';
 
             this.$router.push('/signin')
@@ -81,7 +77,11 @@ export default {
 
         // If sign up fails, remove the csrf and signedIn items and returns an error msg
         signupFailed(error) {
-            this.error = (error.response && error.response.data && error.response.data.error) || '';
+            if (this.createPassword !== this.confirmPassword) {
+                this.error = 'Passwords must match.'
+            } else {
+                this.error = error || ''
+            }
             delete localStorage.csrf
             delete localStorage.signedIn
         },
@@ -149,6 +149,7 @@ export default {
         margin-top: 24px;
         transition: .4s;
         position: relative;
+
         &::after {
             height: 2px;
             background-color: rgb(189, 189, 255);
@@ -160,6 +161,7 @@ export default {
             transition: .4s;
             box-shadow: 0 0 5px rgba(255, 255, 255, 0.75);
         }
+
         &::before {
             height: 1.5px;
             background-color: rgb(189, 189, 255);
@@ -171,6 +173,7 @@ export default {
             transition: .4s;
             box-shadow: 0 0 5px rgba(255, 255, 255, 0.75);
         }
+
         &:hover {
             background-color: rgb(25, 81, 186);
             transition: .4s;
@@ -181,7 +184,8 @@ export default {
             width: 100%;
             transition: .4s;
         }
-        &:hover::after{
+
+        &:hover::after {
             width: 100%;
             transition: .4s;
         }
@@ -190,8 +194,19 @@ export default {
     a {
         text-decoration: none;
         color: rgb(27, 107, 255);
+
         &:hover {
             text-decoration: underline;
         }
+    }
+}
+
+#signup-container__error {
+    color: red;
+}
+
+@media all and (max-width: 550px) {
+    .auth-container form {
+        width: 90%;
     }
 }</style>

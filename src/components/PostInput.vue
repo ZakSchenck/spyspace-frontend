@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section v-if="isHomePage ? getShowPostInput : true">
         <div>
             <img alt="profile photo" src="../assets/pfp-funny.jpeg" />
             <input type="text" maxlength="280" v-model="inputText" placeholder="Enter your thoughts..." />
@@ -10,6 +10,8 @@
     
 <script>
 import { postData } from '../api/postData';
+import { postReplyData } from '../api/postData';
+import { mapGetters } from 'vuex';
 export default {
     name: 'PostInput',
     data() {
@@ -20,15 +22,30 @@ export default {
     },
 
     computed: {
+        ...mapGetters(['getShowPostInput']),
+        // If the input is empty, add disabled class, else, add not-disabled
         postButtonClass() {
             return this.inputText.length > 0 ? 'not-disabled' : 'disabled';
         },
+
+        // Checks if user is signed in
+        userIsSignedIn() {
+            return localStorage.getItem('isSignedIn')
+        },
+
+        // Returns true if on the home page
+        isHomePage() {
+            return this.$route.path === '/'
+        }
     },
     methods: {
+        // Adds new post
         async post() {
             if (this.inputText.length > 0) {
-                await postData({ body: this.inputText });
+                // Handles if you are on home page vs reply page
+                window.location.pathname === '/' ? await postData({ body: this.inputText }) : await postReplyData({ body: this.inputText }, this.$route.params.postId)
             }
+            window.location.reload();
         },
     }
 }
