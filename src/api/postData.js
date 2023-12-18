@@ -1,6 +1,6 @@
 // Get all post data
 export const getPostData = async () => {
-    const apiUrl = 'http://localhost:3000/api/v1/posts';
+    const apiUrl = 'https://aqueous-castle-11914-39a6909963bb.herokuapp.com/api/v1/posts';
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Posts API failed to fetch')
@@ -13,7 +13,7 @@ export const getPostData = async () => {
 
 // Get a specific user's posts
 export const getUserPosts = async (username) => {
-    const apiUrl = `http://localhost:3000/users/${username}/posts`
+    const apiUrl = `https://aqueous-castle-11914-39a6909963bb.herokuapp.com/users/${username}/posts`
 
     try {
         const response = await fetch(apiUrl);
@@ -37,7 +37,7 @@ export const postData = async (sentData) => {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/v1/posts', {
+        const response = await fetch('https://aqueous-castle-11914-39a6909963bb.herokuapp.com/api/v1/posts', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(sentData),
@@ -69,7 +69,7 @@ export const postReplyData = async (sentData, id) => {
     };
 
     try {
-        const response = await fetch(`http://localhost:3000/api/v1/posts/${id}/replies`, {
+        const response = await fetch(`https://aqueous-castle-11914-39a6909963bb.herokuapp.com/api/v1/posts/${id}/replies`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(sentData),
@@ -92,7 +92,7 @@ export const postReplyData = async (sentData, id) => {
 
 // Get single post and its replies
 export const getSinglePost = async (id) => {
-    const postEndpoint = `http://localhost:3000/posts/${id}`;
+    const postEndpoint = `https://aqueous-castle-11914-39a6909963bb.herokuapp.com/posts/${id}`;
     try {
         const response = await fetch(postEndpoint);
         if (!response.ok) throw new Error('Get single post endpoint failed.');
@@ -106,7 +106,7 @@ export const getSinglePost = async (id) => {
 
 // Sign in user
 export const signIn = async (user) => {
-    const loginEndpoint = 'http://localhost:3000/signin'; // Replace this with your actual login endpoint
+    const loginEndpoint = 'https://aqueous-castle-11914-39a6909963bb.herokuapp.com/signin'; // Replace this with your actual login endpoint
 
     const requestOptions = {
         method: 'POST',
@@ -136,7 +136,7 @@ export const signIn = async (user) => {
 
 // User sign up endpoint
 export const signUp = async (user) => {
-    const signUpEndpoint = 'http://localhost:3000/signup';
+    const signUpEndpoint = 'https://aqueous-castle-11914-39a6909963bb.herokuapp.com/signup';
 
     const requestOptions = {
         method: 'POST',
