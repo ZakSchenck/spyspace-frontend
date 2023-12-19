@@ -72,6 +72,7 @@ export default {
             window.location.reload();
             localStorage.removeItem('csrf');
             localStorage.removeItem('username');
+            localStorage.removeItem('accessToken');
             localStorage.removeItem('picture');
             localStorage.removeItem('signedIn');
         },

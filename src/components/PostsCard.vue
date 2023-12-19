@@ -23,33 +23,42 @@
 </template>
     
 <script>
+import { mapGetters } from 'vuex';
 export default {
     name: 'PostsCard',
     data() {
         return {
             // Checks if api data is loading
             isLoading: true,
-            // Data for all posts
-            postData: null,
             // Numbers of data to be shown with infinite scroll
             numberOfData: 10
         }
     },
 
-    props: {
-        data: Object
-    },
-
     // GET data for all posts
     async created() {
+        this.isLoading = true;
         try {
-            this.postData = await this.data;
-            this.isLoading = false;
+            await this.$store.dispatch('fetchPosts');
         } catch (error) {
-            this.isLoading = false;
             console.error('Error fetching data:', error);
+        } finally {
+            this.isLoading = false;
         }
     },
+
+    watch: {
+        // Reactively adds new post without refresh
+        async allPosts() {
+            // Call API when the watched store item changes
+            try {
+                await this.$store.dispatch('fetchPosts');
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+    },
+
     // Add scroll function for infinite scroll
     mounted() {
         window.addEventListener('scroll', this.handleInfiniteScroll);
@@ -60,12 +69,10 @@ export default {
         window.removeEventListener('scroll', this.handleInfiniteScroll);
     },
     computed: {
+        ...mapGetters(['allPosts']),
         // Reverses the order of postData and gets the first 10 elements initially
         reversedPosts() {
-            const copyData = this.postData.slice();
-            const reversedData = copyData.reverse();
-            const data = reversedData.slice(0, this.numberOfData)
-            return data;
+            return [...this.allPosts].reverse().slice(0, this.numberOfData);
         },
     },
     methods: {
@@ -152,6 +159,7 @@ export default {
         height: 20px;
         filter: invert(1);
         margin-top: 16px;
+
         &:hover {
             cursor: pointer;
         }

@@ -54,6 +54,17 @@ export default {
         }
     },
 
+    watch: {
+        // Reactively adds new post without refresh
+        async postData() {
+            try {
+                this.postData = await getSinglePost(this.postId);
+            } catch (error) {
+                console.error('Error fetching post:', error);
+            }
+        }
+    },
+
     methods: {
         // Formats created_at api date to mm/dd/yyyy
         formatDate(dateString) {

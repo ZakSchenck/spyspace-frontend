@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <router-view></router-view>
   </div>
 </template>
@@ -40,5 +40,11 @@ body {
   background-size: cover;
   height: 100vh;
   width: 100vw;
+}
+
+@media all and (max-width: 820px) {
+    div[data-v-4a805387], div[data-v-55a7dc77], div[data-v-c6bdc170], div[data-v-c6bdc170] {
+      display: block;
+    }
 }
 </style>

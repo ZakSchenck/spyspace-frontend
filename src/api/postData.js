@@ -1,8 +1,9 @@
+const apiUrl = 'https://aqueous-castle-11914-39a6909963bb.herokuapp.com'
 // Get all post data
 export const getPostData = async () => {
-    const apiUrl = 'https://aqueous-castle-11914-39a6909963bb.herokuapp.com/api/v1/posts';
+    const url = `${apiUrl}/api/v1/posts`;
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(url);
         if (!response.ok) throw new Error('Posts API failed to fetch')
         const postData = await response.json();
         return postData;
@@ -13,10 +14,10 @@ export const getPostData = async () => {
 
 // Get a specific user's posts
 export const getUserPosts = async (username) => {
-    const apiUrl = `https://aqueous-castle-11914-39a6909963bb.herokuapp.com/users/${username}/posts`
+    const url = `${apiUrl}/users/${username}/posts`
 
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(url);
         if (!response.ok) throw new Error('User posts API failed to fetch')
         const data = await response.json();
         return data
@@ -28,16 +29,16 @@ export const getUserPosts = async (username) => {
 // POST new post
 export const postData = async (sentData) => {
     const crsfToken = localStorage.getItem('csrf')
-    // const accessToken = localStorage.getItem('accessToken')
+    const accessToken = localStorage.getItem('accessToken')
     console.log(crsfToken)
     const headers = {
         'Content-Type': 'application/json',
         'X-CRSF-Token': crsfToken,
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+        'Authorization': `Bearer ${accessToken}`,
     };
 
     try {
-        const response = await fetch('https://aqueous-castle-11914-39a6909963bb.herokuapp.com/api/v1/posts', {
+        const response = await fetch(`${apiUrl}/api/v1/posts`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(sentData),
@@ -69,7 +70,7 @@ export const postReplyData = async (sentData, id) => {
     };
 
     try {
-        const response = await fetch(`https://aqueous-castle-11914-39a6909963bb.herokuapp.com/api/v1/posts/${id}/replies`, {
+        const response = await fetch(`${apiUrl}/api/v1/posts/${id}/replies`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(sentData),
@@ -92,7 +93,7 @@ export const postReplyData = async (sentData, id) => {
 
 // Get single post and its replies
 export const getSinglePost = async (id) => {
-    const postEndpoint = `https://aqueous-castle-11914-39a6909963bb.herokuapp.com/posts/${id}`;
+    const postEndpoint = `${apiUrl}/posts/${id}`;
     try {
         const response = await fetch(postEndpoint);
         if (!response.ok) throw new Error('Get single post endpoint failed.');
@@ -106,7 +107,7 @@ export const getSinglePost = async (id) => {
 
 // Sign in user
 export const signIn = async (user) => {
-    const loginEndpoint = 'https://aqueous-castle-11914-39a6909963bb.herokuapp.com/signin'; // Replace this with your actual login endpoint
+    const loginEndpoint = `${apiUrl}/signin`; // Replace this with your actual login endpoint
 
     const requestOptions = {
         method: 'POST',
@@ -136,7 +137,7 @@ export const signIn = async (user) => {
 
 // User sign up endpoint
 export const signUp = async (user) => {
-    const signUpEndpoint = 'https://aqueous-castle-11914-39a6909963bb.herokuapp.com/signup';
+    const signUpEndpoint = `${apiUrl}/signup`;
 
     const requestOptions = {
         method: 'POST',

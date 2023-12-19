@@ -35,18 +35,27 @@ export default {
 
         // Returns true if on the home page
         isHomePage() {
-            return this.$route.path === '/'
+            return this.$route.path === '/spyspace-frontend/'
         }
     },
     methods: {
         // Adds new post
         async post() {
-            if (this.inputText.length > 0) {
-                // Handles if you are on home page vs reply page
-                window.location.pathname === '/' ? await postData({ body: this.inputText }) : await postReplyData({ body: this.inputText }, this.$route.params.postId)
+        if (this.inputText.length > 0) {
+            let response;
+            if (window.location.pathname === '/spyspace-frontend/#/') {
+                response = await postData({ body: this.inputText });
+                if (response && response.success) {
+                    // Dispatch to add new post
+                    this.$store.dispatch('addPost', response.post);
+                    // Clear input field
+                    this.inputText = ''; 
+                }
+            } else {
+                response = await postReplyData({ body: this.inputText }, this.$route.params.postId);
             }
-            window.location.reload();
-        },
+        }
+    },
     }
 }
 </script>

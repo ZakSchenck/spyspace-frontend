@@ -72,6 +72,7 @@ export default {
             localStorage.setItem('picture', response.picture);
             localStorage.setItem('accessToken', response.token.access);
             localStorage.setItem('signedIn', true);
+            console.log(localStorage.getItem('accessToken'))
             this.error = '';
             this.$router.push('/');
         },
