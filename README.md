@@ -19,6 +19,14 @@
 ## Why Vue 2?
 The reason I am using Vue 2 is because this is what my current company utilizes. I wanted to grow as a developer in this company, and that requires using the frontend stack we use. As the project grows, it might be smart to convert to Vue 3, but as of now, it's lightweight enough to warrant Vue 2 as an acceptable use-case. I do believe Vue is a great technology to use over React here, due to how lightweight the library is
 
+## Future features
+* Like button
+* Adding replies that belong to a user (implementing username)
+* Adding replies to replies
+* Notifications bar
+* Follow button
+
+  
 ## Challenges
 ### One of the bigger challenges to implement myself was an infinite scroll the was quick and efficient:
 ```
