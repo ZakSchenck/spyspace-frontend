@@ -49,12 +49,15 @@ export default {
 
     watch: {
         // Reactively adds new post without refresh
-        async allPosts() {
+        async allPosts(newVal, oldVal) {
             // Call API when the watched store item changes
-            try {
-                await this.$store.dispatch('fetchPosts');
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            // Only fetch new posts if a specific condition is met
+            if (this.newPostsFetched(newVal, oldVal)) {
+                try {
+                    await this.$store.dispatch('fetchPosts');
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             }
         }
     },
@@ -76,6 +79,10 @@ export default {
         },
     },
     methods: {
+        // Checks if new post has been added to database
+        newPostsFetched(newVal, oldVal) {
+            return newVal.length !== oldVal.length;
+        },
         // Formats created_at api date to mm/dd/yyyy
         formatDate(dateString) {
             const date = new Date(dateString);

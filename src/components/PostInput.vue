@@ -43,7 +43,7 @@ export default {
         async post() {
         if (this.inputText.length > 0) {
             let response;
-            if (window.location.pathname === '/spyspace-frontend/#/') {
+            if (window.location.pathname === '/' || window.location.pathname === '/spyspace-frontend/') {
                 response = await postData({ body: this.inputText });
                 if (response && response.success) {
                     // Dispatch to add new post
